@@ -1,16 +1,21 @@
 // этот код позволяет менять карточки местами через перетаскивание их мышью
 
-let dragged; // плохо; надо найти решение сделать эту переменную локальной
+//let dragged; // плохо; надо найти решение сделать эту переменную локальной
 
 function dragStartHandler(event) {
   //event.dataTransfer.setData("text/html", event.target.closest(".card"));
   //console.log("I'm gragged: ");
-  dragged = event.target.closest(".card");
+  let dragged = event.target.closest(".card");
   //console.log(event.target.closest(".card"));
+  event.dataTransfer.setData("text", dragged.id);
 };
 
 function dropHandler(event) {
   event.preventDefault();
+  let dragged = event.dataTransfer.getData("text");
+  console.log(dragged);
+  dragged = document.getElementById(dragged);
+
   let target = event.target.closest('.card');
   //console.log("I'm the target: ");
   //console.log(target);
