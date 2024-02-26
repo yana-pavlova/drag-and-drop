@@ -1,7 +1,5 @@
 // этот код позволяет менять карточки местами через перетаскивание их мышью
 
-//let dragged; // плохо; надо найти решение сделать эту переменную локальной
-
 function dragStartHandler(event) {
   //event.dataTransfer.setData("text/html", event.target.closest(".card"));
   //console.log("I'm gragged: ");
@@ -13,7 +11,7 @@ function dragStartHandler(event) {
 function dropHandler(event) {
   event.preventDefault();
   let dragged = event.dataTransfer.getData("text");
-  console.log(dragged);
+  //console.log(dragged);
   dragged = document.getElementById(dragged);
 
   let target = event.target.closest('.card');
@@ -24,27 +22,35 @@ function dropHandler(event) {
   //cardsContainer.prepend(dragged);
 
   // идея: отрисовывать DOM заново
-  let container = new DocumentFragment(); // временный контейнер
-  let cards = document.querySelectorAll('.card');
-  cards = [...cards]; // конвертировали в массив
+  // проверить, что таргет не null (если бросают карточку в пустое место в контейнере)
+  if (target != null) {
+    let container = new DocumentFragment(); // временный контейнер
+    let cards = document.querySelectorAll('.card');
+    cards = [...cards]; // конвертировали в массив
+    
+    //console.log(`индекс таргета: ${cards.indexOf(target)}`);
+    //console.log(`индекс перестаскиваемого элемента: ${cards.indexOf(dragged)}`);
+    
+    let targetIndex = cards.indexOf(target);
+    let draggedIndex = cards.indexOf(dragged);
   
-  //console.log(`индекс таргета: ${cards.indexOf(target)}`);
-  //console.log(`индекс перестаскиваемого элемента: ${cards.indexOf(dragged)}`);
+    let temp; // временная переменная для смены мест
   
-  let targetIndex = cards.indexOf(target);
-  let draggedIndex = cards.indexOf(dragged);
+    temp = cards[targetIndex]; // положили во временную переменную таргет
+  
+    cards[targetIndex] = cards[draggedIndex]; // вместо таргета положили source
+    cards[draggedIndex] = temp; // вместо сорса положили таргет
+  
+    cards.forEach((elem) => {
+      container.appendChild(elem);
+    });
+    cardsContainer.append(container);  
+  } else {
+    //console.log("NULL!");
 
-  let temp; // временная переменная для смены мест
-
-  temp = cards[targetIndex]; // положили во временную переменную таргет
-
-  cards[targetIndex] = cards[draggedIndex]; // вместо таргета положили source
-  cards[draggedIndex] = temp; // вместо сорса положили таргет
-
-  cards.forEach((elem) => {
-    container.appendChild(elem);
-  });
-  cardsContainer.append(container);
+    return
+  };
+  
 };
 
 const cardsContainer = document.querySelector(".cardsContainer");
