@@ -5,6 +5,8 @@ function dragStartHandler(event) {
   //console.log("I'm gragged: ");
   let dragged = event.target.closest(".card");
   //console.log(event.target.closest(".card"));
+  // setdata метод - это метод HTML drag&drop API
+  // он принимает только текст, ему нельзя передать ссылку на объект, поэтому мы передаём ID, чтобы потом найти на странице элемент с этим ID
   event.dataTransfer.setData("text", dragged.id);
 };
 
